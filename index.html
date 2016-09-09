@@ -1,0 +1,243 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+	<title>Document</title>
+    <style>
+        body {
+            background-color: Black;
+            font-family: 'Arial, Helvetica, sans-serif';
+        }
+         .topAnimation
+        {
+            display:block;
+            -webkit-animation-name:topAni;
+            -webkit-animation-duration:1000ms;
+            -webkit-animation-iteration-count:ease-out;
+            
+            -moz-animation-name:topAni;
+            -moz-animation-duration:1000ms;
+            -moz-animation-iteration-count:ease-out;
+           
+          
+        }
+        
+        @keyframes topAni
+        {
+            0%{transform:translate3d(100%,0,0) skewX(-30deg);opacity:0 }
+            60%{transform:skewX(20deg);opacity:1;}
+            80%{transform:skewX(-5deg);opacity:1}
+            100%{transform:none;opacity:1}
+        }
+      
+       @-moz-keyframes topAni
+        {
+            0%{-moz-transform:translate3d(100%,0,0) skewX(-30deg);opacity:0 }
+            60%{-moz-transform:skewX(20deg);opacity:1;}
+            80%{-moz-transform:skewX(-5deg);opacity:1}
+            100%{-moz-transform:none;opacity:1}
+        }
+      
+        .shaketop
+        {
+            animation-name:shake;
+            animation-duration:0.5s;
+             -moz-animation-name:shake;
+            -moz-animation-duration:0.5s;
+        }
+        
+        @-webkit-keyframes shake
+        {
+            0%,100%{animation:translate3d(0,0,0);}
+            10%,30%,50%,70%,90%
+            {
+                transform:translate3d(-5px,0,0);
+            }
+            20%,40%,60%,80%
+            {
+               transform:translate3d(10px,0,0);
+            }
+        }
+        
+         @-moz-keyframes shake
+        {
+            0%,100%{-moz-animation:translate3d(0,0,0);}
+            10%,30%,50%,70%,90%
+            {
+                -moz-transform:translate3d(-5px,0,0);
+            }
+            20%,40%,60%,80%
+            {
+                -moz-transform:translate3d(10px,0,0);
+            }
+        }
+         .rotate3d
+        {
+            animation-name:rotate3d;
+            animation-duration:2s;
+             -moz-animation-name:rotate3d;
+            -moz-animation-duration:2s;
+        }
+        
+        @-webkit-keyframes rotate3d
+        {
+           0%{transform:rotateY(60deg);opacity:1 }
+           20%{transform:rotateY(120deg);opacity:1 }
+           40%{transform:rotateY(180deg);opacity:1 }
+            60%{transform:rotateY(240deg);opacity:1;}
+            80%{transform:rotateY(300deg);opacity:1}
+            100%{transform:rotateY(360deg);opacity:1}
+        }
+        h2
+        {
+            margin:40px auto;
+            color: Aqua;
+            text-shadow:-4px -4px 4px #fff;
+        }
+        h3
+        {
+            margin-top:400px;
+            float:right;
+            color:#0094ff;
+            text-shadow:0px 4px 4px #fff;
+        }
+        canvas
+        {
+            margin:auto;
+            position:absolute;
+            left:0;
+            top:0;
+            right:0;
+            bottom:0;
+            z-index:-1;
+        }
+        .moon {
+            width: 100px;
+            height: 100px;
+            border-radius: 100px;
+            background-color: #eee;
+            box-shadow: -1px 4px 9px #fff;
+            position: absolute;
+            margin-top:-150px;
+            margin-left:50px;
+            left: 50%;
+            top: 50%;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <h2 id="top" class="topAnimation">杜小杜，中秋节快乐！♡</h2>
+	<canvas id="myCanvas"  style="box-shadow:6px 10px 10px #333;background-color:#000;width:350px;height:350px;">
+		您的浏览器不支持。。。
+	</canvas>
+    <div class="moon"></div>
+    
+    <h3>爱你的老公<input type="button" value="点我一下试试" onclick="window.location.reload()" /></h3>
+    <audio autoplay="autoplay"loop="loop" id="audio">
+        <source type="audio/mpeg" />
+    </audio>
+    <script src="granuleAnimation.js" type="text/javascript"></script>
+	<script type="text/javascript">
+        window.onload = function () {
+            var audio = document.getElementById("audio");
+            var num = Math.floor(Math.random() * 10);
+            audio.src = getSound(num);
+            audio.play();
+
+            var top = document.querySelector("#top");
+            
+	        var text = top.innerText;
+	        addAnimation(text, top);
+
+	        setTimeout(function () {
+	            top.className = "rotate3d";
+	            setTimeout(function () {
+	                top.className = "shaketop";
+	                doAni();
+	            }, 2020)
+	        }, 1020);
+	        var defaultoptions = {
+	            canvas: document.getElementById("myCanvas"),
+	            canvasW: 350, //画布高
+	            canvasH: 350,
+	            //imgSrc: "du"+getRandom()+".png",
+	            imgSrc: "du3.png",
+	            delay: 100, //开始的延迟时间（多少s后开始）
+	            duration: 16, //持续时间
+	            interval: 3 // 缓冲时间
+	        };
+	        var ga = new GranuleAnimation(defaultoptions);
+	        ga.draw();
+	    }
+	    function getChinese(dom) {
+	        var domText = dom.innerText;
+	        var text = domText.match(/[\u4E00-\u9FA5\uF900-\uFA2D]/g); //匹配中文字符
+	        return text;
+	    }
+	    function addAnimation(array, dom) {
+	        dom.innerText = "";
+	        
+	        for (var i = 0; i < array.length; i++) {
+	            array[i].i = i;
+	            var span = document.createElement("span")
+	            span.innerHTML = array[i];
+	            span.style.color = getRandomColor();
+	            dom.appendChild(span);
+	        }
+	    }
+	    function getRandomColor() {
+	        var r = Math.floor(Math.random() * 255);
+
+	        var g = Math.floor(Math.random() * 255);
+
+	        var b = Math.floor(Math.random() * 255);
+	        return  "rgb("+r+", "+g+", "+b+")";
+	    }
+	    function doAni() {
+	        setTimeout(
+           function () {
+               var spans = document.getElementsByTagName("span");
+               for (var i = 0; i < spans.length; i++) {
+                   spans[i].style.color = getRandomColor();
+                   spans[i].className = "shaketop";
+               }
+               doAni();
+           }, 1000)
+       }
+       function getRandom() {
+           return Math.floor(Math.random() * 10);
+       }
+       function getSound(num) {
+           switch (num) {
+               case 0:
+                   return "zlx.mp3";
+               case 1:
+                   return "月亮代表我的心.mp3";
+               case 2:
+                   return "弯弯的月亮.mp3";
+               case 3:
+                   return "星月神话.mp3";
+               case 4:
+                   return "星晴.mp3";
+               case 5:
+                   return "穿越时空的思念.mp3";
+               case 6:
+                   return "迷情仙境.mp3";
+               case 7:
+                   return "飘雪.mp3";
+               case 8:
+                   return "桂林.mp3";
+               case 9:
+                   return "迷情仙境.mp3";
+
+
+               default:
+                   break;
+
+           }
+       }
+    </script>
+</body>
+</html>

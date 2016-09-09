@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+	<title>Document</title>
+    <style>
+        body
+        {
+            background-color:Black;
+        }
+         .topAnimation
+        {
+            display:block;
+            -webkit-animation-name:topAni;
+            -webkit-animation-duration:1000ms;
+            -webkit-animation-iteration-count:ease-out;
+            
+            -moz-animation-name:topAni;
+            -moz-animation-duration:1000ms;
+            -moz-animation-iteration-count:ease-out;
+           
+          
+        }
+        
+        @-webkit-keyframes topAni
+        {
+            0%{-webkit-transform:translate3d(100%,0,0) skewX(-30deg);opacity:0 }
+            60%{-webkit-transform:skewX(20deg);opacity:1;}
+            80%{-webkit-transform:skewX(-5deg);opacity:1}
+            100%{-webkit-transform:none;opacity:1}
+        }
+      
+       @-moz-keyframes topAni
+        {
+            0%{-moz-transform:translate3d(100%,0,0) skewX(-30deg);opacity:0 }
+            60%{-moz-transform:skewX(20deg);opacity:1;}
+            80%{-moz-transform:skewX(-5deg);opacity:1}
+            100%{-moz-transform:none;opacity:1}
+        }
+      
+        .shaketop
+        {
+            -webkit-animation-name:shake;
+            -webkit-animation-duration:0.5s;
+             -moz-animation-name:shake;
+            -moz-animation-duration:0.5s;
+        }
+        
+        @-webkit-keyframes shake
+        {
+            0%,100%{-webkit-animation:translate3d(0,0,0);}
+            10%,30%,50%,70%,90%
+            {
+                -webkit-transform:translate3d(-5px,0,0);
+            }
+            20%,40%,60%,80%
+            {
+                -webkit-transform:translate3d(10px,0,0);
+            }
+        }
+        
+         @-moz-keyframes shake
+        {
+            0%,100%{-moz-animation:translate3d(0,0,0);}
+            10%,30%,50%,70%,90%
+            {
+                -moz-transform:translate3d(-5px,0,0);
+            }
+            20%,40%,60%,80%
+            {
+                -moz-transform:translate3d(10px,0,0);
+            }
+        }
+        h2
+        {
+            font-family:华文琥珀;
+            color: Aqua;
+            text-shadow:-2px -2px 4px #0094ff;
+        }
+        h3
+        {
+            margin-top:430px;
+            float:right;
+            color:#0094ff;
+            font-family:草檀斋毛泽东字体;
+            text-shadow:0px 2px 2px Aqua;
+        }
+        canvas
+        {
+            margin:auto;
+            position:absolute;
+            left:0;
+            top:0;
+            right:0;
+            bottom:0;
+            z-index:-1;
+        }
+        .moon
+        {
+            width:100px;
+            height:100px;
+            border-radius:100px;
+            background-color:#eee;
+            box-shadow:-1px 4px 9px #fff;
+            float:right;
+        }
+    </style>
+</head>
+<body>
+    <h2 id="top" class="topAnimation">杜小杜，中秋节快乐！♡</h2>
+	<canvas id="myCanvas"  style="box-shadow:0px 10px 10px #333;background-color:#000;width:750px;height:350px;">
+		您的浏览器不支持。。。
+	</canvas>
+    <div class="moon"></div>
+    <h3>爱你的老公</h3>
+    <script src="granuleAnimation.js" type="text/javascript"></script>
+	<script type="text/javascript">
+	    window.onload = function () {
+	        setTimeout(function () {
+	            var top = document.querySelector("#top");
+	            top.className = "shaketop";
+            },1020);
+	        
+	        var defaultoptions = {
+	            canvas: document.getElementById("myCanvas"),
+	            canvasW: 750, //画布高
+	            canvasH: 750,
+	            imgSrc: "dudu.png",
+	            delay: 50, //开始的延迟时间（多少s后开始）
+	            duration: 600, //持续时间
+	            interval: 60 // 缓冲时间
+	        };
+	        var ga = new GranuleAnimation(defaultoptions);
+	        ga.draw();
+	    }
+    </script>
+</body>
+</html>

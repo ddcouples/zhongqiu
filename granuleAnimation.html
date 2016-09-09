@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<canvas id="myCanvas" width="400" height="400" style="box-shadow:3px 3px 3px #ddd;background-color:#fff;">
+		您的浏览器不支持。。。
+	</canvas>
+	<script type="text/javascript">
+	    window.onload = function () {
+	        (function () {
+	            var requestId;
+	            // 获取canvas元素
+	            var canvas = document.getElementById("myCanvas");
+	            var imgSrc = "jh.png";
+	            var ctx = null;
+	            if (canvas.getContext) {
+	                ctx = canvas.getContext('2d');
+	                canvas.ctx = ctx;
+	            }
+	            // 把加载完的图像绘制到画布上
+	            var image;
+	            image = new Image(); //创建一个Image对象，实现图片的预下载  
+	            image.src = imgSrc;
+	            image.onload = function () {
+	                ctx.drawImage(image, 0, 0);
+	                image.imgeData = ctx.getImageData(0, 0, image.width, image.height);
+	                calculate();
+	                draw();
+
+	            }
+	         
+	            var particles = [];
+	            //计算并保存坐标
+	            function calculate() {
+	                var data = image.imgeData.data;
+	                //只保存100行 100列的像素值
+	                var cols = 100,
+            	        rows = 100;
+	                //设成100行，100列后的每个元素的宽高
+	                var s_width = parseInt(Math.ceil(image.width / cols)),
+            	    s_height = parseInt(Math.ceil(image.height / rows));
+	                var pos = 0; //数组中的位置
+	                var par_x, par_y; //粒子的x，y坐标
+	                for (var i = 1; i <= cols; i++) {
+	                    for (var j = 1; j <= rows; j++) {
+	                        pos = [(j * s_height - 1) * image.width + (i * s_width - 1)] * 4;
+	                        //判断R值是否符合要求
+	                        if (data[pos] >= 0) {
+	                            var particle = {
+	                                //偏移， x，y值都随机一下
+	                                count: 0,
+	                                delay: 100 * Math.random(),
+	                                currTime: 0,
+	                                duration: 1000 * Math.random(),
+	                                interval: 60 * Math.random(),
+	                                x0:  (Math.random()) * 400,
+	                                y0:  (Math.random()) * 400,
+	                                x1: (image.x + i * s_width) * 0.4,
+	                                y1: (image.y + j * s_height) * 0.4+ 100,
+	                                fillStyle: "rgba(" + data[pos] + "," + data[pos + 1] + "," + data[pos + 2] + "," + data[pos + 3] + ")"
+	                            }
+	                            //符合要求的的粒子保存在数组中
+	                            particles.push(particle);
+	                        }
+	                    }
+	                }
+	            }
+
+	            // 绘图案
+	            function draw() {
+	                canvas.ctx.clearRect(0, 0, canvas.width, canvas.height);
+	                var len = particles.length, cur_particle = null;
+	                var cur_x, cur_y;
+	                var cur_time = 0, duration = 0, cur_delay = 0;
+	                //把保存的粒子全部绘制到画布里
+	                for (var i = 0; i < len; i++) {
+	                    cur_particle = particles[i];
+	                    //设置填充颜色
+	                    if (cur_particle.count++ > cur_particle.delay) {
+	                        canvas.ctx.fillStyle = cur_particle.fillStyle;
+	                        //canvas.ctx.fillRect(cur_particle.x1, cur_particle.y1, 1, 1);
+	                        //获取当前的time和持续时间的延迟
+	                        cur_time = cur_particle.currTime;
+	                        duration = cur_particle.duration;
+	                        cur_delay = cur_particle.interval;
+	                        //如果最后一个也执行完了就停止动画并return
+//	                        if (particles[len - 1].duration < particles[len - 1].currTime) {
+//	                            //cancelAnimationFrame(requestId);
+//	                            //canvas.ctx.fillRect(cur_particle.x1, cur_particle.y1, 10, 10);
+//	                            //return;
+//	                        } else
+	                        if (cur_time < duration) {
+	                            //当前粒子正在运动就算出此时的x的坐标
+	                            cur_x = Math.easeInOutExpo(cur_time, cur_particle.x0, cur_particle.x1 - cur_particle.x0, duration);
+	                            cur_y = Math.easeInOutExpo(cur_time + cur_delay, cur_particle.y0, cur_particle.y1 - cur_particle.y0, duration);
+	                            canvas.ctx.fillRect(cur_x, cur_y, 1, 1);
+	                            //当前时间++
+	                            cur_particle.currTime++;
+	                        } else {
+	                            //终点绘制在画布上
+	                            canvas.ctx.fillRect(cur_particle.x1, cur_particle.y1, 1, 1);
+	                        }
+	                    }
+	                }
+	                requestId = requestAnimationFrame(draw);
+	            }
+
+	            //缓动函数
+	            Math.easeInOutExpo = function (t, b, c, d) {
+	                t /= d / 2;
+	                if (t < 1) return c / 2 * Math.pow(2, 10 * (t - 1)) + b;
+	                t--;
+	                return c / 2 * (-Math.pow(2, -10 * t) + 2) + b;
+	            }
+
+
+
+
+
+	        } ())
+	    }
+	</script>
+</body>
+</html>
